@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Build vs Buy Scorecard | CS Angel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --mid:#161d46;
+    --blue:#3982f6;
+    --yellow:#ffe14d;
+    --bg:#eef2fb;
+    --card:#ffffff;
+    --ink:#28324f;
+    --mute:#5b6788;
+    --line:#dbe3f4;
+    --font:"Manrope",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  .csa-wrap{
+    font-family:var(--font);
+    color:var(--ink);
+    background:var(--bg);
+    padding:22px 16px 30px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  .csa-card{
+    max-width:720px;margin:0 auto;background:var(--card);
+    border:1px solid var(--line);border-radius:22px;overflow:hidden;
+    box-shadow:0 18px 46px rgba(22,29,70,.10);
+  }
+  /* header */
+  .csa-head{background:var(--mid);color:#fff;padding:26px 30px 30px;position:relative;overflow:hidden}
+  .csa-head .ring{position:absolute;border-radius:50%;border:10px solid var(--yellow);opacity:.10;width:150px;height:150px;top:-46px;right:-30px}
+  .csa-head .ring2{position:absolute;border-radius:50%;border:11px solid var(--blue);opacity:.14;width:150px;height:150px;bottom:-90px;left:-40px}
+  .csa-brand{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+  .csa-brand img{width:44px;height:44px;display:block}
+  .csa-kicker{font-weight:600;font-size:12.5px;letter-spacing:2.4px;color:var(--yellow)}
+  .csa-title{font-weight:800;font-size:32px;letter-spacing:-.4px;margin:16px 0 8px;position:relative;z-index:1}
+  .csa-title b{color:var(--yellow);font-weight:800}
+  .csa-intro{font-size:15.5px;color:#c6d4f5;max-width:560px;position:relative;z-index:1}
+  .csa-legend{display:flex;gap:18px;margin-top:16px;position:relative;z-index:1;flex-wrap:wrap}
+  .csa-legend span{font-size:13px;color:#9fb2e0;display:flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .dot.b{background:var(--blue)} .dot.y{background:var(--yellow)}
+  /* questions */
+  .csa-body{padding:12px 30px 6px}
+  .q{padding:20px 0;border-bottom:1px solid var(--line)}
+  .q:last-child{border-bottom:none}
+  .q-top{display:flex;gap:13px;align-items:flex-start}
+  .q-num{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--bg);
+    color:var(--mid);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .q-txt h3{margin:0;font-size:17px;font-weight:700;color:var(--mid)}
+  .q-txt p{margin:4px 0 0;font-size:14px;color:var(--mute)}
+  .q-anchor{margin:2px 0 0;font-size:12.5px;color:var(--mute);opacity:.85}
+  .q-anchor b{color:var(--ink);font-weight:600}
+  .scale{display:flex;gap:8px;margin:14px 0 0 40px;flex-wrap:wrap}
+  .scale button{
+    flex:1 1 0;min-width:52px;min-height:46px;border:1.6px solid var(--line);background:#fff;
+    border-radius:12px;font-family:var(--font);font-weight:700;font-size:16px;color:var(--mute);
+    cursor:pointer;transition:transform .08s ease,border-color .12s ease,background .12s ease,color .12s ease;
+  }
+  .scale button:hover{border-color:var(--blue);color:var(--mid)}
+  .scale button:focus-visible{outline:3px solid rgba(57,130,246,.4);outline-offset:2px}
+  .scale button[aria-pressed="true"]{background:var(--mid);border-color:var(--mid);color:#fff}
+  .scale button[aria-pressed="true"] .halo{display:block}
+  /* result panel */
+  .csa-result{margin:8px 30px 0;background:var(--mid);border-radius:18px;color:#fff;padding:24px 26px;position:relative;overflow:hidden}
+  .csa-result .ring3{position:absolute;border-radius:50%;border:12px solid var(--yellow);opacity:.10;width:160px;height:160px;bottom:-70px;right:-40px}
+  .res-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;position:relative;z-index:1;flex-wrap:wrap}
+  .res-label{font-size:12.5px;letter-spacing:2.4px;font-weight:600;color:var(--yellow)}
+  .res-score{font-size:15px;color:#9fb2e0;font-weight:600}
+  .res-score b{color:#fff;font-size:26px;font-weight:800}
+  /* spectrum */
+  .spectrum{margin:20px 0 6px;position:relative;z-index:1}
+  .track{height:14px;border-radius:9px;background:linear-gradient(90deg,var(--blue) 0%,#7fa8f0 38%,#e9d98f 60%,var(--yellow) 100%);position:relative}
+  .tick{position:absolute;top:-4px;width:2px;height:22px;background:rgba(255,255,255,.35)}
+  .needle{position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);
+    width:26px;height:26px;border-radius:50%;background:#fff;border:4px solid var(--yellow);
+    box-shadow:0 3px 10px rgba(0,0,0,.35);opacity:0;transition:left .35s cubic-bezier(.4,0,.2,1),opacity .25s ease}
+  .zones{display:flex;justify-content:space-between;margin-top:9px;font-size:12.5px;color:#9fb2e0;font-weight:600}
+  .zones span{width:33.3%}
+  .zones .mid{text-align:center} .zones .rt{text-align:right}
+  .verdict{margin-top:16px;position:relative;z-index:1;font-size:16px;line-height:1.5;
+    background:rgba(255,255,255,.07);border-left:4px solid var(--yellow);border-radius:0 10px 10px 0;padding:14px 16px}
+  .verdict.buy{border-left-color:var(--blue)}
+  .verdict.build{border-left-color:var(--yellow)}
+  .verdict.stop{border-left-color:#ff6b6b;background:rgba(255,107,107,.12)}
+  .verdict strong{font-weight:800}
+  /* gates */
+  .gates{margin:16px 30px 0;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+  .gates h4{margin:0 0 4px;font-size:15px;color:var(--mid);font-weight:800}
+  .gates .sub{margin:0 0 12px;font-size:13px;color:var(--mute)}
+  .gate{display:flex;align-items:flex-start;gap:12px;padding:9px 0}
+  .gate + .gate{border-top:1px dashed var(--line)}
+  .toggle{flex:0 0 auto;position:relative;width:46px;height:26px;border-radius:20px;background:#c9d4ea;
+    border:none;cursor:pointer;transition:background .15s ease;margin-top:1px}
+  .toggle:focus-visible{outline:3px solid rgba(57,130,246,.4);outline-offset:2px}
+  .toggle::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
+    background:#fff;transition:left .15s ease;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .toggle[aria-pressed="true"]{background:#ff6b6b}
+  .toggle[aria-pressed="true"]::after{left:23px}
+  .gate-txt{font-size:14.5px;color:var(--ink)}
+  .gate-txt b{color:var(--mid)}
+  /* footer */
+  .csa-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:20px 30px 24px;flex-wrap:wrap}
+  .reset{font-family:var(--font);font-weight:700;font-size:14px;color:var(--mid);background:#fff;
+    border:1.6px solid var(--line);border-radius:11px;padding:10px 18px;cursor:pointer}
+  .reset:hover{border-color:var(--blue)}
+  .reset:focus-visible{outline:3px solid rgba(57,130,246,.4);outline-offset:2px}
+  .foot-note{font-size:13px;color:var(--mute)}
+  .foot-note a{color:var(--blue);text-decoration:none;font-weight:700}
+  .foot-note a:hover{text-decoration:underline}
+  @media (max-width:560px){
+    .csa-head,.csa-body,.csa-foot{padding-left:20px;padding-right:20px}
+    .csa-result,.gates{margin-left:20px;margin-right:20px}
+    .csa-title{font-size:27px}
+    .scale{margin-left:0}
+    .scale button{min-width:44px;font-size:15px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .needle,.scale button,.toggle,.toggle::after{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="csa-wrap">
+  <div class="csa-card">
+
+    <div class="csa-head">
+      <div class="ring"></div><div class="ring2"></div>
+      <div class="csa-brand">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAYAAACI7Fo9AAAwV0lEQVR4nO2dd3hb1d3HP1e2LO894jixEyeOs5xJdshiFF5oobyluwXeFuiikwKlA0pLy4Yu+hbelpaWFyht2ZSZBJKQQUL2tLNsZzre25J83j9O" alt="CS Angel">
+        <span class="csa-kicker">CS ANGEL &middot; BUILD VS BUY PLAYBOOK</span>
+      </div>
+      <h1 class="csa-title">The Build <b>vs</b> Buy Scorecard</h1>
+      <p class="csa-intro">Everyone wants the AI silver bullet. There isn't one. So score the one capability in front of you, one line at a time. Five always leans build, one always leans buy.</p>
+      <div class="csa-legend">
+        <span><i class="dot b"></i> 1 = lean buy</span>
+        <span><i class="dot y"></i> 5 = lean build</span>
+      </div>
+    </div>
+
+    <div class="csa-body" id="questions"></div>
+
+    <div class="csa-result">
+      <div class="ring3"></div>
+      <div class="res-row">
+        <span class="res-label">WHERE YOU LAND</span>
+        <span class="res-score"><b id="scoreNum">0</b> / 35</span>
+      </div>
+      <div class="spectrum">
+        <div class="track">
+          <div class="tick" style="left:37.5%"></div>
+          <div class="tick" style="left:73.2%"></div>
+          <div class="needle" id="needle"></div>
+        </div>
+        <div class="zones"><span>Buy</span><span class="mid">Hybrid</span><span class="rt">Build</span></div>
+      </div>
+      <div class="verdict" id="verdict">Answer all seven lines to see where you land. <strong>0 of 7</strong> done.</div>
+    </div>
+
+    <div class="gates">
+      <h4>Two hard stops</h4>
+      <p class="sub">These override your score. A strong total cannot rescue an unsafe or unowned build.</p>
+      <div class="gate">
+        <button class="toggle" id="gateData" aria-pressed="false" aria-label="Toggle data hard stop"></button>
+        <span class="gate-txt"><b>The data gate.</b> Building this would put customer data somewhere you cannot contain.</span>
+      </div>
+      <div class="gate">
+        <button class="toggle" id="gateOwner" aria-pressed="false" aria-label="Toggle ownership hard stop"></button>
+        <span class="gate-txt"><b>The ownership gate.</b> No named person will own the upkeep after launch.</span>
+      </div>
+    </div>
+
+    <div class="csa-foot">
+      <button class="reset" id="reset">Reset scorecard</button>
+      <span class="foot-note">Part of the CS Angel Build vs Buy playbook &middot; <a href="https://www.csangel.com" target="_blank" rel="noopener">csangel.com</a></span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var Q = [
+    {t:"Differentiation", d:"Is this unique to how your company wins, or table stakes everyone needs?", lo:"table stakes", hi:"uniquely ours"},
+    {t:"Coverage gap", d:"How much of this do your current vendors leave unsolved?", lo:"they already do it", hi:"big gap, nobody does it"},
+    {t:"Maintenance capacity", d:"Do you have a named person to own upkeep after launch?", lo:"nobody", hi:"yes, a named owner"},
+    {t:"Data containment", d:"How safely can you contain customer data if you build this?", lo:"it would leak", hi:"fully contained"},
+    {t:"Runway", d:"How much time do you have to build this properly?", lo:"need it next week", hi:"plenty of runway"},
+    {t:"Cost visibility", d:"Can you see and cap the running cost, tokens included?", lo:"no real idea", hi:"clear view and a cap"},
+    {t:"Governance readiness", d:"Can you standardize and monitor this, not just ship it?", lo:"ship and hope", hi:"ready to govern"}
+  ];
+
+  var values = [null,null,null,null,null,null,null];
+  var gateData = false, gateOwner = false;
+
+  var qWrap = document.getElementById('questions');
+  Q.forEach(function(q, i){
+    var el = document.createElement('div');
+    el.className = 'q';
+    var scale = '';
+    for(var n=1;n<=5;n++){
+      scale += '<button type="button" data-q="'+i+'" data-v="'+n+'" aria-pressed="false" aria-label="'+q.t+', score '+n+'">'+n+'</button>';
+    }
+    el.innerHTML =
+      '<div class="q-top">'+
+        '<div class="q-num">'+(i+1)+'</div>'+
+        '<div class="q-txt"><h3>'+q.t+'</h3><p>'+q.d+'</p>'+
+        '<p class="q-anchor">1 = <b>'+q.lo+'</b> &nbsp;&middot;&nbsp; 5 = <b>'+q.hi+'</b></p></div>'+
+      '</div>'+
+      '<div class="scale" role="group" aria-label="'+q.t+' score">'+scale+'</div>';
+    qWrap.appendChild(el);
+  });
+
+  var scoreNum = document.getElementById('scoreNum');
+  var needle = document.getElementById('needle');
+  var verdict = document.getElementById('verdict');
+
+  function total(){ var s=0; for(var i=0;i<7;i++){ s += values[i]||0; } return s; }
+  function answered(){ var c=0; for(var i=0;i<7;i++){ if(values[i]!==null) c++; } return c; }
+
+  function update(){
+    var t = total(), ans = answered();
+    scoreNum.textContent = t;
+    var pct = Math.max(0, Math.min(100, (t-7)/28*100));
+    needle.style.left = pct+'%';
+    needle.style.opacity = (ans===7) ? '1' : '0';
+
+    verdict.className = 'verdict';
+    var gate = gateData || gateOwner;
+
+    if(gate){
+      var why = gateData && gateOwner ? "Customer data you cannot contain, and no owner for the upkeep."
+              : gateData ? "You cannot contain the customer data this would touch."
+              : "No one is on the hook to maintain this after launch.";
+      verdict.className = 'verdict stop';
+      verdict.innerHTML = '<strong>Hard stop.</strong> '+why+' Whatever the score says, buy it or wait. No total rescues an unsafe or unowned build.';
+      return;
+    }
+
+    if(ans < 7){
+      verdict.innerHTML = 'Answer all seven lines to see where you land. <strong>'+ans+' of 7</strong> done.';
+      return;
+    }
+
+    if(t >= 28){
+      verdict.className = 'verdict build';
+      verdict.innerHTML = '<strong>Build is defensible.</strong> It is yours, you can own it, you can govern it. Clear the two hard stops below before you commit.';
+    } else if(t >= 18){
+      verdict.innerHTML = '<strong>Hybrid, and worth a real conversation.</strong> Buy the platform, then build the custom layer that is actually yours.';
+    } else {
+      verdict.className = 'verdict buy';
+      verdict.innerHTML = '<strong>Buy leans clearly ahead.</strong> This is not where your originality should go. Find a best-in-class vendor, deploy fast, and move on.';
+    }
+  }
+
+  qWrap.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-q]');
+    if(!b) return;
+    var qi = +b.getAttribute('data-q'), v = +b.getAttribute('data-v');
+    values[qi] = v;
+    var group = b.parentNode.querySelectorAll('button');
+    group.forEach(function(x){ x.setAttribute('aria-pressed', x===b ? 'true':'false'); });
+    update();
+  });
+
+  function bindGate(id, setter){
+    var el = document.getElementById(id);
+    el.addEventListener('click', function(){
+      var on = el.getAttribute('aria-pressed')!=='true';
+      el.setAttribute('aria-pressed', on?'true':'false');
+      setter(on);
+      update();
+    });
+  }
+  bindGate('gateData', function(v){ gateData=v; });
+  bindGate('gateOwner', function(v){ gateOwner=v; });
+
+  document.getElementById('reset').addEventListener('click', function(){
+    values = [null,null,null,null,null,null,null];
+    gateData=false; gateOwner=false;
+    qWrap.querySelectorAll('button[data-q]').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+    document.getElementById('gateData').setAttribute('aria-pressed','false');
+    document.getElementById('gateOwner').setAttribute('aria-pressed','false');
+    update();
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
